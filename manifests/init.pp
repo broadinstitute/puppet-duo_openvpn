@@ -81,7 +81,16 @@ class duo_openvpn (
     }
   }
 
-  file { 'duo_openvpn_path':
+  file { 'duo_openvpn_extract_path':
+    ensure => 'directory',
+    backup => false,
+    group  => $group,
+    mode   => '0700',
+    owner  => $owner,
+    path   => $extract_path,
+  }
+
+  file { 'duo_openvpn_install_path':
     ensure => 'directory',
     backup => false,
     group  => $group,
@@ -98,6 +107,7 @@ class duo_openvpn (
     extract      => true,
     extract_path => $extract_path,
     notify       => Exec['duo_openvpn_build'],
+    require      => File['duo_openvpn_extract_path'],
     source       => $archive_url,
   }
 
@@ -114,6 +124,6 @@ class duo_openvpn (
     cwd         => "${extract_path}/duo_openvpn-${version}",
     path        => '/usr/sbin:/usr/bin:/sbin:/bin',
     refreshonly => true,
-    require     => File['duo_openvpn_path'],
+    require     => File['duo_openvpn_install_path'],
   }
 }
