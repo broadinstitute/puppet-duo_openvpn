@@ -7,7 +7,7 @@ duo_openvpn::download_path: '/tmp'
 duo_openvpn::download_url: ~
 duo_openvpn::extract_path: '/opt/duo_openvpn'
 duo_openvpn::group: 'root'
-duo_openvpn::install_path_mode: '0700'
+duo_openvpn::install_path_mode: '0755'
 duo_openvpn::install_path: '/opt/duo'
 duo_openvpn::manage_packages: true
 duo_openvpn::owner: 'root'
