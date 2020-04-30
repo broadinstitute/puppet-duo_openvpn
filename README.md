@@ -1,10 +1,8 @@
 # duo_openvpn
 
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
+Puppet module to download, build, and install the [duo_openvpn][1] plugin
 
-The README template below provides a starting point with details about what information to include in your README.
-
-#### Table of Contents
+## Table of Contents
 
 1. [Description](#description)
 2. [Setup - The basics of getting started with duo_openvpn](#setup)
@@ -17,71 +15,56 @@ The README template below provides a starting point with details about what info
 
 ## Description
 
-Briefly tell users why they might want to use your module. Explain what your module does and what kind of problems users can solve with it.
-
-This should be a fairly short description helps the user decide if your module is what they want.
+If you need two-factor authentication with [OpenVPN][2], you can use the [duo_openvpn][1] plugin to enable 2fa if you already use [Duo][3] in your enterprise.
 
 ## Setup
 
-### What duo_openvpn affects **OPTIONAL**
+### What duo_openvpn affects
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
+This module only concerns itself with downloading and installing the [duo_openvpn][1] plugin on a system. It does not configure [OpenVPN][2] in any way.  By default, all files are downloaded and installed in the `/opt` directory, but can be overridden with parameters to this class if needed.
 
-If there's more that they should know about, though, this is the place to mention:
+### Setup Requirements
 
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
+This module relies on the [Archive][4] module for downloading the [duo_openvpn][1] software.
 
 ### Beginning with duo_openvpn
 
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+Not many options should be needed to get this module running. The only thing to watch out for is the fact that certain packages (`curl`, `gcc`, and `make`) are managed by default in this module.  If you already manage these packages elsewhere, it may be necessary to override the `$duo_openvpn::default_packages` array of packages to remove any duplicate packages.
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your users how to use your module to solve problems, and be sure to include code examples. Include three to five examples of the most important or common tasks a user can accomplish with your module. Show users how to accomplish more complex tasks that involve different types, classes, and functions working in tandem.
+For most cases, just including the class is probably enough:
 
-## Reference
-
-This section is deprecated. Instead, add reference information to your code as Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your module. For details on how to add code comments and generate documentation with Strings, see the Puppet Strings [documentation](https://puppet.com/docs/puppet/latest/puppet_strings.html) and [style guide](https://puppet.com/docs/puppet/latest/puppet_strings_style.html)
-
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the root of your module directory and list out each of your module's classes, defined types, facts, functions, Puppet tasks, task plans, and resource types and providers, along with the parameters for each.
-
-For each element (class, defined type, function, and so on), list:
-
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
-
-For example:
-
+```puppet
+include duo_openvpn
 ```
-### `pet::cat`
 
-#### Parameters
+However if, for example, you want a different version of the module than the default, you can specify that as well:
 
-##### `meow`
-
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
+```puppet
+class { 'duo_openvpn':
+  version => '2.3',
+}
 ```
 
 ## Limitations
 
-In the Limitations section, list any incompatibilities, known issues, or other warnings.
+None that we know of (yet).
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing to your project and how they should submit their work.
+TBD
 
-## Release Notes/Contributors/Etc. **Optional**
+### REFERENCE.md
 
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
+The `REFERENCE.md` file is generated using [puppet-strings][5]. If you make changes to any of the inline documenation, please regenerate this file and add it to your commit:
+
+```sh
+puppet strings generate --format markdown
+```
+
+[1]: https://github.com/duosecurity/duo_openvpn.git "duo_openvpn"
+[2]: https://openvpn.net/ "OpenVPN"
+[3]: https://duo.com/ "Duo"
+[4]: https://forge.puppet.com/puppet/archive "Archive"
+[5]: https://puppet.com/docs/puppet/latest/puppet_strings.html "puppet-strings"

@@ -1,60 +1,31 @@
-# Class: duo_openvpn
-# ===========================
-#
-# Download, build, and install the duo_openvpn OpenVPN plugin
-#
-# Parameters
-# ----------
-#
-# * `default_packages`
-# An array of packages to require (Default: curl, gcc, make)
-#
-# * `download_path`
-# The directory to which the tar file for duo_openvpn will be downloaded (Default: /tmp)
-#
-# * `download_url`
-# The URL from which duo_openvpn will be downloaded (Default: auto-generated from version)
-#
-# * `extract_path`
-# The path where the downloaded tar file will be extracted (Default: /opt/duo_openvpn)
-#
-# * `group`
-# The group ownership on the install path directory (Default: root)
-#
-# * `install_path`
-# The location where the built plugin will be installed (Default: /opt/duo)
-#
-# * `install_path_mode`
-# The directory mode (permissions) on the install path directory (Default: 0700)
-#
-# * `owner`
-# The owner on the install path directory (Default: root)
-#
-# * `version`
-# The version of the duo_openvpn plugin to install (Default: 2.4)
-#
-#
-# Examples
-# --------
+# @summary Download, build, and install the duo_openvpn OpenVPN plugin
 #
 # @example
-#  class { 'duo_openvpn': }
-#
+#  include duo_openvpn
 # @example
 #  class { 'duo_openvpn':
 #    install_path => '/usr/local/duo',
 #    version      => '2.0',
 #  }
 #
-# Authors
-# -------
-#
-# Broad Institute
-#
-# Copyright
-# ---------
-#
-# Copyright 2020 Broad Institute
+# @param [Array] default_packages
+#   An array of packages to require (Default: curl, gcc, make)
+# @param [Stdlib::Absolutepath] download_path
+#   The directory to which the tar file for duo_openvpn will be downloaded (Default: /tmp)
+# @param [Stdlib::HTTPSUrl] download_url
+#   (optional) The URL from which duo_openvpn will be downloaded (Default: auto-generated from version)
+# @param [Stdlib::Absolutepath] extract_path
+#   The path where the downloaded tar file will be extracted (Default: /opt/duo_openvpn)
+# @param [String] group
+#   The group ownership on the install path directory (Default: root)
+# @param [Stdlib::Absolutepath] install_path
+#   The location where the built plugin will be installed (Default: /opt/duo)
+# @param [String] install_path_mode
+#   The directory mode (permissions) on the install path directory (Default: 0755)
+# @param [String] owner
+#   The owner on the install path directory (Default: root)
+# @param [String] version
+#   The version of the duo_openvpn plugin to install (Default: 2.4)
 #
 class duo_openvpn (
   Array $default_packages,
