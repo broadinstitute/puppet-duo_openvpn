@@ -1,6 +1,6 @@
 {
   "name": "broadinstitute-duo_openvpn",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "broadinstitute",
   "summary": "Puppet module to download, build, and install the duo_openvpn plugin",
   "license": "BSD-3-Clause",
@@ -33,7 +33,8 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "9"
+        "9",
+        "10"
       ]
     },
     {

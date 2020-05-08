@@ -1,0 +1,63 @@
+---
+name: 'commit-checks'
+
+'on': 'push'
+
+jobs:
+
+  unit-tests:
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        puppet-version:
+          - '5'
+          - '5.0'
+          - '6'
+          - '6.0'
+        ruby-version:
+          - '2.4'
+
+    steps:
+      - name: 'Checkout repo'
+        uses: 'actions/checkout@v2'
+
+      - name: 'Set up Ruby'
+        uses: 'actions/setup-ruby@v1'
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+
+      - name: 'Get full ruby version'
+        id: 'full-ruby-version'
+        run: |
+          echo ::set-output name=version::$(ruby -e "puts(RUBY_VERSION)")
+
+      - name: 'Configure Ruby'
+        run: |
+          rm -f Gemfile.lock
+          gem update --system --no-doc
+
+      - name: 'Install PDK'
+        run: |
+          gem install pdk --no-doc
+          mkdir -p ~/.config/puppet
+          echo -e "---\ndisabled: true" > ~/.config/puppet/analytics.yml
+
+      - name: 'Get full PDK version'
+        id: 'full-pdk-version'
+        run: |
+          echo ::set-output name=version::$(pdk --version)
+
+      - name: 'Cache PDK'
+        uses: 'actions/cache@v1'
+        with:
+          path: '~/.pdk'
+          key: ${{ runner.os }}-v1-pdk-${{ steps.full-pdk-version.outputs.version }}-${{ hashFiles('Gemfile') }}
+          restore-keys: |
+            ${{ runner.os }}-v1-pdk-${{ steps.full-pdk-version.outputs.version }}-
+
+      - name: 'Run validation'
+        run: 'pdk validate --parallel'
+
+      - name: 'Run unit-tests'
+        run: 'pdk test unit -v --parallel --puppet-version=${{ matrix.puppet-version }}'

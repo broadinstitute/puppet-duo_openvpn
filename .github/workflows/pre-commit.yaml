@@ -1,0 +1,57 @@
+---
+name: 'commit-checks'
+
+'on': 'pull_request'
+
+jobs:
+  pre-commit:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: 'Checkout repo'
+        uses: 'actions/checkout@v2'
+
+      - name: 'Git setup'
+        run: |
+          git fetch --no-tags --prune origin +refs/heads/*:refs/remotes/origin/*
+          git checkout ${{ github.base_ref }}
+          git checkout ${{ github.head_ref }}
+
+      - name: 'Set up Python'
+        uses: 'actions/setup-python@v1'
+        with:
+          python-version: 3.7
+
+      - name: 'Get full python version'
+        id: 'full-python-version'
+        run: |
+          echo ::set-output name=version::$(python -c "import sys; print('-'.join(str(v) for v in sys.version_info))")
+
+      - name: 'Get pip cache dir'
+        id: 'pip-cache'
+        run: |
+          pip --version
+          pip install -U pip
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: 'Cache pip'
+        uses: 'actions/cache@v1'
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-v1-pip-${{ steps.full-python-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-v1-pip-
+
+      - name: 'Install pre-commit'
+        run: 'pip install pre-commit'
+
+      - name: 'Cache pre-commit'
+        uses: 'actions/cache@v1'
+        with:
+          path: ' ~/.cache/pre-commit'
+          key: ${{ runner.os }}-v1-pre-commit-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-v1-pre-commit-
+
+      - name: 'Run pre-commit'
+        run: 'pre-commit run --from-ref ${{ github.base_ref }} --to-ref ${{ github.head_ref }}'

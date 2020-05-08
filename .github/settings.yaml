@@ -1,0 +1,34 @@
+---
+repository:
+  # See https://developer.github.com/v3/repos/#edit for all available settings.
+  # The name of the repository. Changing this will rename the repository
+  name: 'puppet-duo_openvpn'
+  description: 'Puppet module to download, build, and install the duo_openvpn plugin'
+  private: false
+  has_issues: true
+  has_wiki: true
+  has_downloads: true
+  default_branch: 'master'
+  allow_squash_merge: true
+  allow_merge_commit: true
+  allow_rebase_merge: true
+  labels:
+    - name: 'maintenance'
+      color: 'fef2c0'
+    - name: 'bugfix'
+      oldname: 'bug'
+  teams:
+    - name: 'bits-puppet-admins'
+      permission: 'admin'
+  branches:
+    - name: 'master'
+      protection:
+        required_pull_request_reviews:
+          required_approving_review_count: 1
+          dismiss_stale_reviews: true
+          require_code_owner_reviews: true
+        required_status_checks:
+          strict: true
+          # Required. The list of status checks to require in order to merge into this branch
+          # contexts: []
+        enforce_admins: true
